@@ -36,7 +36,8 @@ func (d *Dllist) Append(value any) {
 	// d.InsertNode(value, -1)  //可以直接调用下面的中间节点插入
 }
 
-//中间节点插入数据
+//选择节点插入数据
+//-1末尾，0第一个位置，正数为中间位置，目前负数等同于-1
 func (d *Dllist) InsertNode(value any, position int) {
 	newNode := &Node{
 		value: value,
@@ -78,7 +79,29 @@ func (d *Dllist) InsertNode(value any, position int) {
 }
 
 //待完成
+//0删除头部，小于0删除尾部，其他删除中间
 func (d *Dllist) RemoveNode(position int) {
+	length := d.Len()
+	if length < 1 {
+		return
+	}
+
+	if position < 0 {
+		d.tail.previous.next = nil
+		d.tail = d.tail.previous
+	} else if position == 0 { //删除开头
+		d.head.next.previous = nil
+		d.head = d.head.next
+	} else { //删除中间
+		current := d.head
+		for i := 0; i < position; i++ {
+			current = current.next
+		}
+		//将前一个节点的next指向被删除的下一个节点
+		current.previous.next = current.next
+		//将下一个节点的previous指向被删除的上一个节点
+		current.next.previous = current.previous
+	}
 
 }
 
@@ -112,6 +135,7 @@ func main() {
 	doublelinklist.Append("e")
 
 	doublelinklist.InsertNode("我", 1)
+	doublelinklist.RemoveNode(-1)
 	doublelinklist.PrintValue()
 	fmt.Println(doublelinklist.Len())
 }
