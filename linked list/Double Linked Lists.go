@@ -78,11 +78,17 @@ func (d *Dllist) InsertNode(value any, position int) {
 	}
 }
 
-//待完成
 //0删除头部，小于0删除尾部，其他删除中间
 func (d *Dllist) RemoveNode(position int) {
 	length := d.Len()
-	if length < 1 {
+	if length < 1 || position > length {
+		return
+	}
+
+	//只有一个节点的情况随意怎么删都行
+	if length == 1 {
+		d.head = nil
+		d.tail = nil
 		return
 	}
 
@@ -105,6 +111,28 @@ func (d *Dllist) RemoveNode(position int) {
 
 }
 
+//反转链表
+func (d *Dllist) ReverseDoublyLinkedLis() {
+	length := d.Len()
+	if length <= 1 {
+		return
+	}
+	//将所有节点的previous和next指针反向
+	current := d.head
+	//用于记录每一个节点的next指针
+	var next *Node
+	for current != nil {
+		//记录下每个节点的前后指针指向
+		// previous = current.previous
+		next = current.next
+		current.previous, current.next = current.next, current.previous
+		//下一个节点
+		current = next
+	}
+	//调换开头和结尾的位置
+	d.head, d.tail = d.tail, d.head
+}
+
 //打印所有数据
 func (d *Dllist) PrintValue() {
 	current := d.head
@@ -122,7 +150,6 @@ func (d *Dllist) Len() int {
 		len++
 		current = current.next
 	}
-
 	return len
 }
 
@@ -134,8 +161,11 @@ func main() {
 	doublelinklist.Append("d")
 	doublelinklist.Append("e")
 
-	doublelinklist.InsertNode("我", 1)
-	doublelinklist.RemoveNode(-1)
+	// doublelinklist.InsertNode("我", 1)
+	// doublelinklist.RemoveNode(1)
+	// doublelinklist.RemoveNode(-1)
+	// doublelinklist.RemoveNode(1)
+	doublelinklist.ReverseDoublyLinkedLis()
 	doublelinklist.PrintValue()
 	fmt.Println(doublelinklist.Len())
 }
